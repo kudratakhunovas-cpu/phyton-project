@@ -1,25 +1,4 @@
-flags = {
-    'ru': {'red blue', 'white'},
-    'kg': {'red', 'yellow'},
-    'ua': {'red blue', 'red', 'blue'},
-    'uk': {'yellow', "blue"},
-    'kz': {'yellow', 'blue'},
-    'us': {'red', 'blue', 'white'},    
-    'de': {'black', 'red', 'yellow'},  
-    'fr': {'blue', 'white', 'red'}
-}
-while True: 
-    user_input = input("\n Введите цвет на англ, от души").lower().strip()
-    
-    if input == 'exit':
-        print('конец игры)')
-        break
-    colors = set(user_input.split())
-    result = [domain for domain, flag_colors in flags.items() if colors.issubset(flag_colors)]
-    
-    if result:
-        print("такой цвет есть:", ", ".join(result))
-        
-    else:
-        print("Такого цвета нет")
-    
+
+print("what your name?)
+name = input()
+print("hi,"name)
