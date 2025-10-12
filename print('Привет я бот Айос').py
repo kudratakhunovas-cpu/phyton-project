@@ -1,6 +1,0 @@
-print('Привет я бот Айос')
-name = str(input('укажите ваше ФИО '))
-age = int(input('укажите ваш возраст '))
-place = str(input('укажите место жительства '))
-gender = str(input('укажите ваш пол м/ж '))
-print(f'Вас зовут - {name.title()}\nВам {age}лет\nВы живете - {place.capitalize()}\nВаш пол - {gender}')
