@@ -1,11 +1,349 @@
-{
-	"folders": [
-		{
-			"path": "../privet"
-		},
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
-}
+from abc import ABC, abstractmethod
+
+class Account:
+    def __init__(self, account_number, balance, pin_code):
+        self.__account_number = account_number
+        self.__balance = balance
+        self.__pin_code = pin_code
+
+    def deposit(self, amount, pin):
+        if pin == self.__pin_code:
+            self.__balance += amount
+            print(f'Счёт пополнен на {amount}. Новый баланс: {self.__balance}')
+        else:
+            print("Неверный PIN.")
+
+    def withdraw(self, amount, pin):
+        if pin != self.__pin_code:
+            print("Неверный PIN.")
+        elif amount > self.__balance:
+            print("Недостаточно средств.")
+        else:
+            self.__balance -= amount
+            print(f'Снято {amount}. Остаток: {self.__balance}')
+
+    def get_balance(self, pin):
+        if pin == self.__pin_code:
+            return self.__balance
+        else:
+            print("Неверный PIN.")
+            return None
+
+
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.__price = price
+
+    def set_discount(self, percent):
+        if percent < 0:
+            print("Скидка не может быть отрицательной.")
+        else:
+            new_price = self.__price * (1 - percent / 100)
+            self.__price = max(new_price, 0)
+
+    def final_price(self):
+        return round(self.__price, 2)
+
+
+class Course:
+    def __init__(self, name, max_places):
+        self.__name = name
+        self.__students = []
+        self.__max_places = max_places
+
+    def add_student(self, name):
+        if len(self.__students) < self.__max_places:
+            self.__students.append(name)
+            print(f"{name} добавлен(а) на курс {self.__name}.")
+        else:
+            print("Мест нет.")
+
+    def remove_student(self, name):
+        if name in self.__students:
+            self.__students.remove(name)
+            print(f"{name} удалён(а) с курса {self.__name}.")
+        else:
+            print("Такого студента нет.")
+
+    def get_students(self):
+        return tuple(self.__students)
+
+
+class SmartWatch:
+    def __init__(self, battery):
+        self.__battery = battery
+
+    def use(self, minutes):
+        decrease = minutes / 10
+        self.__battery = max(self.__battery - decrease, 0)
+        print(f"Заряд: {self.__battery:.1f}%")
+
+    def charge(self, percent):
+        self.__battery = min(self.__battery + percent, 100)
+        print(f"Заряд: {self.__battery:.1f}%")
+
+    def get_battery(self):
+        return self.__battery
+
+
+class Transport:
+    def __init__(self, speed, capacity):
+        self.speed = speed
+        self.capacity = capacity
+
+    def travel_time(self, distance):
+        return distance / self.speed
+
+class Bus(Transport):
+    pass
+
+class Train(Transport):
+    pass
+
+class Airplane(Transport):
+    def travel_time(self, distance):
+        time = super().travel_time(distance)
+        return time * 0.8
+
+
+class Order:
+    def __init__(self, food, base_price):
+        self.food = food
+        self.base_price = base_price
+
+    def calculate_total(self):
+        return self.base_price
+
+class DineInOrder(Order):
+    def calculate_total(self):
+        tip = self.base_price * 0.1
+        return self.base_price + tip
+
+class TakeAwayOrder(Order):
+    def calculate_total(self):
+        discount = self.base_price * 0.05
+        return self.base_price - discount
+
+class DeliveryOrder(Order):
+    def calculate_total(self):
+        delivery = self.base_price * 0.15
+        return self.base_price + delivery
+
+
+class Character:
+    def __init__(self, name, hp, atk):
+        self.name = name
+        self.hp = hp
+        self.atk = atk
+
+    def attack(self):
+        pass
+
+class Warrior(Character):
+    def attack(self):
+        print(f"{self.name} атакует мечом!")
+
+class Mage(Character):
+    def attack(self):
+        print(f"{self.name} выпускает магический снаряд!")
+
+class Archer(Character):
+    def attack(self):
+        print(f"{self.name} стреляет из лука!")
+
+
+class MediaFile:
+    def __init__(self, title, duration):
+        self.title = title
+        self.duration = duration
+
+    def play(self):
+        pass
+
+class AudioFile(MediaFile):
+    def play(self):
+        print(f"Воспроизводится аудио: {self.title} ({self.duration} мин)")
+
+class VideoFile(MediaFile):
+    def play(self):
+        print(f"Воспроизводится видео: {self.title} ({self.duration} мин)")
+
+class Podcast(MediaFile):
+    def play(self):
+        print(f"Воспроизводится подкаст: {self.title} ({self.duration} мин)")
+
+
+class PaymentSystem(ABC):
+    @abstractmethod
+    def process_payment(self, amount):
+        pass
+
+class CreditCardPayment(PaymentSystem):
+    def process_payment(self, amount):
+        print(f"Оплата {amount} сом через кредитную карту прошла успешно.")
+
+class CryptoPayment(PaymentSystem):
+    def process_payment(self, amount):
+        print(f"Оплата {amount} сом криптовалютой прошла успешно.")
+
+class BankTransfer(PaymentSystem):
+    def process_payment(self, amount):
+        print(f"Оплата {amount} сом банковским переводом прошла успешно.")
+
+
+class Animal(ABC):
+    @abstractmethod
+    def eat(self):
+        pass
+
+    @abstractmethod
+    def sleep(self):
+        pass
+
+class Lion(Animal):
+    def eat(self):
+        print("Лев ест мясо.")
+    def sleep(self):
+        print("Лев спит вытянувшись на солнце.")
+
+class Elephant(Animal):
+    def eat(self):
+        print("Слон ест траву и фрукты.")
+    def sleep(self):
+        print("Слон спит стоя.")
+
+class Snake(Animal):
+    def eat(self):
+        print("Змея ест мышей.")
+    def sleep(self):
+        print("Змея спит, свернувшись кольцом.")
+
+
+class Document(ABC):
+    @abstractmethod
+    def open(self):
+        pass
+    @abstractmethod
+    def edit(self):
+        pass
+    @abstractmethod
+    def save(self):
+        pass
+
+class WordDocument(Document):
+    def open(self):
+        print("Открыт Word документ.")
+    def edit(self):
+        print("Редактируется Word документ.")
+    def save(self):
+        print("Word документ сохранён.")
+
+class PdfDocument(Document):
+    def open(self):
+        print("Открыт PDF файл.")
+    def edit(self):
+        print("Редактируется PDF файл.")
+    def save(self):
+        print("PDF файл сохранён.")
+
+class SpreadsheetDocument(Document):
+    def open(self):
+        print("Открыта таблица.")
+    def edit(self):
+        print("Редактируется таблица.")
+    def save(self):
+        print("Таблица сохранена.")
+
+
+class Lesson(ABC):
+    @abstractmethod
+    def start(self):
+        pass
+
+class VideoLesson(Lesson):
+    def start(self):
+        print("Начинается видеоурок!")
+
+class QuizLesson(Lesson):
+    def start(self):
+        print("Начинается тест!")
+
+class TextLesson(Lesson):
+    def start(self):
+        print("Начинается чтение текста!")
+
+
+class EmailNotification:
+    def send(self, message):
+        print(f"📧 Email: {message}")
+
+class SMSNotification:
+    def send(self, message):
+        print(f"📱 SMS: {message}")
+
+class PushNotification:
+    def send(self, message):
+        print(f"🔔 Push: {message}")
+
+notifications = [EmailNotification(), SMSNotification(), PushNotification()]
+for n in notifications:
+    n.send("Привет, Самина!")
+
+
+class Square:
+    def __init__(self, side):
+        self.side = side
+    def perimeter(self):
+        return 4 * self.side
+
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+    def perimeter(self):
+        return 2 * 3.14 * self.radius
+
+class Triangle:
+    def __init__(self, a, b, c):
+        self.a, self.b, self.c = a, b, c
+    def perimeter(self):
+        return self.a + self.b + self.c
+
+shapes = [Square(4), Circle(3), Triangle(2, 4, 6)]
+for s in shapes:
+    print(s.perimeter())
+
+
+class Manager:
+    def work(self):
+        print("Менеджер планирует проекты.")
+
+class Developer:
+    def work(self):
+        print("Разработчик пишет код.")
+
+class Designer:
+    def work(self):
+        print("Дизайнер создаёт визуалы.")
+
+employees = [Manager(), Developer(), Designer()]
+for e in employees:
+    e.work()
+
+
+class FireSpell:
+    def cast(self, target):
+        print(f"{target} получает урон от огня!")
+
+class IceSpell:
+    def cast(self, target):
+        print(f"{target} заморожен!")
+
+class HealingSpell:
+    def cast(self, target):
+        print(f"{target} исцеляется!")
+
+spells = [FireSpell(), IceSpell(), HealingSpell()]
+target = "Волан-де-Морт"
+for spell in spells:
+    spell.cast(target)
