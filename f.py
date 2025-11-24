@@ -24,6 +24,7 @@ class Reptile(Animal):
         self.scale_type = scale_type
 
     def warm_up(self):
+        
         return self.name + ' бьет себя по груди'
 
     def __str__(self):
